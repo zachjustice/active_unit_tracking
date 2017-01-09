@@ -1,0 +1,37 @@
+TIME ENTRY
+    scan barcode of employee or unit
+    parse barcode
+        -all barcodes have a preamble of "b_<id>_"
+        -preamble allows us to determine which partial time entries to 
+        update of if we need to make a new time entry
+    create a row or update an existing row on the time entry table
+        -create/update is based on the barcode scanner preamble
+        -if a row exists with the barcode scanner's id, we update that row
+        with the newly scanned informatoin
+        -if a row doesn't exist with this info, we create a row
+        -(technically we use a hash of barcode scanner id => time_entry_state
+        where the time entry state tells you whether we are ready to 
+        start a new time, initializing a new time entry, keeping time on
+        an in progress time entry, paused, or finished)
+    we then update the tb_time_entry with the barcode's info
+        -upsert the time entry using the employee/unit barcode
+        -we can determine whether to create/update a time entry using the
+        barcode scanner id to determine if an incomplete time entry
+        exists for that id.(the employee or unit is null, and end date is null)
+        -there should only ever be one null end time per barcode scanner id
+        -if they scan the employee name or unit twice at first, just update
+        time entry
+        -if they scan the employee name and unit to start the time entry,
+        but then either the employee name or unit, end the time entry.
+        -when we return data, use a seperate function for determining which 
+        station the time entry applies to
+            -will this make it more difficult to index time entries by station?
+                -yes, would need temp table shit
+            -on the other hand we can determine which station a time entry correspond
+            to since the first time entry is for the first station and so on.
+                - paused time entries?
+                - would need an additional column like is_final
+
+
+SCAN TWICE TO PAUSE GENIUSSSS
+         

@@ -1,0 +1,38 @@
+body {
+  padding-top: 70px;
+  padding-bottom: 30px;
+}
+
+.theme-dropdown .dropdown-menu {
+  position: static;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.theme-showcase > p > .btn {
+  margin: 5px 0;
+}
+
+.theme-showcase .navbar .container {
+  width: auto;
+}
+
+.table-success, .table-success>td, .table-success>th {
+    background-color: #dff0d8;
+}
+
+.table-info, .table-info>td, .table-info>th {
+    background-color: #d9edf7;
+}
+
+.table-warning, .table-warning>td, .table-warning>th {
+    background-color: #fcf8e3;
+}
+
+.table-danger, .table-danger>td, .table-danger>th {
+    background-color: #f2dede;
+}
+
+
+
+

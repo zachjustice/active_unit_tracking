@@ -101,10 +101,18 @@ function receive_get_time_entry_response( time_entry_record )
       )
     {
         time_entry_state = TIME_ENTRY_STATES.IN_PROGRESS;
+        begin_time_entry_timer( time_entry_record );
         $( '#time_entry_' + time_entry_record.time_entry_pk )
             .removeClass( 'table-warning' )
             .addClass( 'table-success' );
     }
+}
+
+function begin_time_entry_timer( time_entry )
+{
+    var now = new Date();
+    var duration = now - new Date( time_entry.start_time );
+    $( '#time_entry_' + time_entry_pk ).find( '.duration' ).text( duration );
 }
 
 // creates a row in the time entry table
@@ -118,6 +126,11 @@ function create_time_entry_row( time_entry_data )
     var start_time         = time_entry_data.start_time;
     var end_time           = time_entry_data.end_time;
     var duration           = time_entry_data.duration;
+
+    if( duration == undefined )
+    {
+        duration = '';
+    }
 
     var row_element = $( '<tr id="time_entry_' + time_entry_pk + '">' )
         .append( '<td class="station">'       + station       + '</td>' )
@@ -148,6 +161,11 @@ function update_time_entry_row( time_entry_record )
     var start_time         = time_entry_record.start_time;
     var end_time           = time_entry_record.end_time;
     var duration           = time_entry_record.duration;
+
+    if( duration == undefined )
+    {
+        duration = '';
+    }
 
     var time_entry_row = $( '#time_entry_' + time_entry_pk );
         time_entry_row.find( '.station'       ).text( station       );

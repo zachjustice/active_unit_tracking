@@ -1,7 +1,7 @@
 "use strict";
-var EMPLOYEE_BARCODE_PREFIX  = 'e'
-var UNIT_BARCODE_PREFIX  = 'u'
-var BARCODE_SCANNER_ID_PREFIX  = 'b'
+var EMPLOYEE_BARCODE_PREFIX  = 'e';
+var UNIT_BARCODE_PREFIX  = 'u';
+var BARCODE_SCANNER_ID_PREFIX  = 'b';
 
 var time_entry_state  = '';
 var TIME_ENTRY_STATES = {
@@ -10,7 +10,7 @@ var TIME_ENTRY_STATES = {
     IN_PROGRESS: 2, // necessary barcodes have been scanned and timing has started
     PAUSED:      3, // no longer working on this time entry (e.g. workday ended)
     DONE:        4  // we have finished this time entry
-}
+};
 
 $( init );
 
@@ -33,7 +33,7 @@ function parse_barcode( barcode )
         unit : '',
         barcode_scanner_id: '',
         employee_name : ''
-    }
+    };
 
     // interpret barcode array into map
     for( var i = 0; i < barcode_array.length; i += 2 )
@@ -43,38 +43,46 @@ function parse_barcode( barcode )
 
         if( barcode_subject == UNIT_BARCODE_PREFIX )
         {
-            barcode_data.unit = barcode_value
+            barcode_data.unit = barcode_value;
         }
         else if( barcode_subject == EMPLOYEE_BARCODE_PREFIX )
         {
-            barcode_data.employee_name = barcode_value
+            barcode_data.employee_name = barcode_value;
         }
         else if( barcode_subject == BARCODE_SCANNER_ID_PREFIX )
         {
-            barcode_data.barcode_scanner_id = barcode_value
+            barcode_data.barcode_scanner_id = barcode_value;
         }
     }
 
-    return barcode_data
+    return barcode_data;
 }
 
 function receive_barcode_input( barcode )
 {
-    console.log("RECEIVED INPUT: " + barcode);
-    // if time_entry_state == TIME_ENTRY_STATES["IN_PROGRESS"]
-    // {
-    //     finish_recording_time( barcode );
-    // }
-
     // parse raw barcode string into a map
     var barcode_data = parse_barcode( barcode );
 
-    $.ajax({
-        url:      '/ajax/get_time_entry.php',
-        dataType: 'json',
-        data:     barcode_data
-    }).done( receive_get_time_entry_response )
-    .fail( /* TODO ajax error handling */ );
+    if( time_entry_state == TIME_ENTRY_STATES.READY 
+        || time_entry_state == TIME_ENTRY_STATES.INITIALIZE
+      )
+    {
+        $.ajax({
+            url:      '/ajax/create_or_update_time_entry.php',
+            dataType: 'json',
+            data:     barcode_data
+        }).done( receive_get_time_entry_response )
+        .fail( /* TODO ajax error handling */ );
+    }
+    else if( time_entry_state == TIME_ENTRY_STATES.IN_PROGRESS )
+    {
+        $.ajax({
+            url:      '/ajax/finish_time_entry.php',
+            dataType: 'json',
+            data:     barcode_data
+        }).done( receive_get_time_entry_response )
+        .fail( /* TODO ajax error handling */ );
+    }
 }
 
 function receive_get_time_entry_response( time_entry )
@@ -95,7 +103,8 @@ function receive_get_time_entry_response( time_entry )
     }
 
     // We have the necessary data to begin tracking time
-    if( time_entry.unit &&
+    if( time_entry_state == TIME_ENTRY_STATES.INITIALIZE &&
+        time_entry.unit &&
         time_entry.employee_name &&
         time_entry.station
       )
@@ -106,10 +115,21 @@ function receive_get_time_entry_response( time_entry )
             .removeClass( 'table-warning' )
             .addClass( 'table-success' );
     }
+    else if( time_entry_state == TIME_ENTRY_STATES.IN_PROGRESS )
+    {
+        time_entry_state = TIME_ENTRY_STATES.DONE;
+        $( '#time_entry_' + time_entry.time_entry_pk )
+            .removeClass( 'table-success' );
+    }
 }
 
 function time_entry_timer( time_entry_pk )
 {
+    if( time_entry_state == TIME_ENTRY_STATES.DONE )
+    {
+        return;
+    }
+
     var now = new Date();
 
     var start_time = $( '#time_entry_' + time_entry_pk ).find( '.start_time' ).text();
@@ -122,23 +142,22 @@ function time_entry_timer( time_entry_pk )
     var minutes = time_diff.getMinutes();
     var seconds= time_diff.getSeconds();
 
-    if( hours < 9 )
+    if( hours < 10 )
     {
         hours = "0" + hours;
     }
 
-    if( minutes < 9 )
+    if( minutes < 10 )
     {
         minutes = "0" + minutes;
     }
 
-    if( seconds < 9 )
+    if( seconds < 10 )
     {
         seconds = "0" + seconds;
     }
 
     var duration = hours + ":" + minutes + ":" + seconds;
-    console.log('time_entry_pk: ' + now + ' - ' + start_time + ' = ' + duration );
 
     $( '#time_entry_' + time_entry_pk ).find( '.duration' ).text( duration );
     setTimeout( time_entry_timer, 1000, time_entry_pk );

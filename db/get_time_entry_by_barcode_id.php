@@ -2,7 +2,7 @@
 
 function get_time_entry_by_barcode_id( $barcode_scanner_id )
 {
-    $query = <<<EOF
+    $query = <<<SQL
         SELECT time_entry,
             barcode_scanner_id,
             unit,
@@ -15,7 +15,7 @@ function get_time_entry_by_barcode_id( $barcode_scanner_id )
         WHERE barcode_scanner_id = $1
           AND (unit IS NULL OR employee_name IS NULL)
           AND end_time IS NULL
-EOF;
+SQL;
 
     $params = [ $barcode_scanner_id ];
 

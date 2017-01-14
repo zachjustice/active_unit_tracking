@@ -2,9 +2,8 @@ TIME ENTRY
     scan barcode of employee or unit
     parse barcode
         -all barcodes have a preamble of "b_<id>_"
-        -preamble allows us to determine which partial time entries to 
-        update of if we need to make a new time entry
-    create a row or update an existing row on the time entry table
+        -preamble allows us to determine which time entry this data applies to
+    create a row or update an existing row on the time entry table (html)
         -create/update is based on the barcode scanner preamble
         -if a row exists with the barcode scanner's id, we update that row
         with the newly scanned informatoin
@@ -13,11 +12,12 @@ TIME ENTRY
         where the time entry state tells you whether we are ready to 
         start a new time, initializing a new time entry, keeping time on
         an in progress time entry, paused, or finished)
-    we then update the tb_time_entry with the barcode's info
+    we then update tb_time_entry with the barcode's info
         -upsert the time entry using the employee/unit barcode
-        -we can determine whether to create/update a time entry using the
-        barcode scanner id to determine if an incomplete time entry
-        exists for that id.(the employee or unit is null, and end date is null)
+        -We create a time entry when there doesn't exist a time entry with
+        a null end date and missing employee name or unit
+        -If there's a time entry for the barcode scanner with a null end
+        date and an employee name or unit number, we update that time entry
         -there should only ever be one null end time per barcode scanner id
         -if they scan the employee name or unit twice at first, just update
         time entry

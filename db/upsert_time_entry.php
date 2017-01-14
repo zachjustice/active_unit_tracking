@@ -11,16 +11,15 @@ function upsert_time_entry( $data )
 
     if( !$time_entry )
     {
-        $result = create_time_entry($data);
+        $time_entry = create_time_entry($data);
     }
     else
     {
         $data['time_entry'] = $time_entry['time_entry'];
-        $result = update_time_entry($data);
+        $time_entry = update_time_entry($data);
     }
 
-    $updated_time_entry = pg_fetch_assoc( $result );
-    return $updated_time_entry;
+    return $time_entry;
 }
 
 ?>

@@ -17,7 +17,9 @@ function update_time_entry( $data )
 
     array_push( $params, $data['time_entry'] );
     $query .= " WHERE time_entry = $2 RETURNING *";
+
     $result = pg_query_params( $query, $params );
-    return $result;
+    $time_entry = pg_fetch_assoc( $result );
+    return $time_entry;
 }
 ?>

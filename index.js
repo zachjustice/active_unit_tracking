@@ -77,7 +77,7 @@ function receive_barcode_input( barcode )
     .fail( /* TODO ajax error handling */ );
 }
 
-function receive_get_time_entry_response( time_entry_record )
+function receive_get_time_entry_response( time_entry )
 {
     if( time_entry_state == TIME_ENTRY_STATES.READY )
     {
@@ -85,34 +85,63 @@ function receive_get_time_entry_response( time_entry_record )
         // create new row in time entrytable
         // use barcode data to create partial time entry
         time_entry_state = TIME_ENTRY_STATES.INITIALIZE;
-        create_time_entry_row( time_entry_record);
+        create_time_entry_row( time_entry);
     }
     else
     {
         // otherwise, time entry row exists and we update partially filled
         // out time entry with new data
-        var is_row_filled_out = update_time_entry_row( time_entry_record );
+        update_time_entry_row( time_entry );
     }
 
     // We have the necessary data to begin tracking time
-    if( time_entry_record.unit &&
-        time_entry_record.employee_name &&
-        time_entry_record.station
+    if( time_entry.unit &&
+        time_entry.employee_name &&
+        time_entry.station
       )
     {
         time_entry_state = TIME_ENTRY_STATES.IN_PROGRESS;
-        begin_time_entry_timer( time_entry_record );
-        $( '#time_entry_' + time_entry_record.time_entry_pk )
+        time_entry_timer( time_entry.time_entry_pk );
+        $( '#time_entry_' + time_entry.time_entry_pk )
             .removeClass( 'table-warning' )
             .addClass( 'table-success' );
     }
 }
 
-function begin_time_entry_timer( time_entry )
+function time_entry_timer( time_entry_pk )
 {
     var now = new Date();
-    var duration = now - new Date( time_entry.start_time );
+
+    var start_time = $( '#time_entry_' + time_entry_pk ).find( '.start_time' ).text();
+        start_time = new Date( start_time );
+
+    var time_diff = now - start_time;
+        time_diff = new Date( time_diff );
+
+    var hours = Math.floor( time_diff / 3600000 );
+    var minutes = time_diff.getMinutes();
+    var seconds= time_diff.getSeconds();
+
+    if( hours < 9 )
+    {
+        hours = "0" + hours;
+    }
+
+    if( minutes < 9 )
+    {
+        minutes = "0" + minutes;
+    }
+
+    if( seconds < 9 )
+    {
+        seconds = "0" + seconds;
+    }
+
+    var duration = hours + ":" + minutes + ":" + seconds;
+    console.log('time_entry_pk: ' + now + ' - ' + start_time + ' = ' + duration );
+
     $( '#time_entry_' + time_entry_pk ).find( '.duration' ).text( duration );
+    setTimeout( time_entry_timer, 1000, time_entry_pk );
 }
 
 // creates a row in the time entry table
@@ -151,16 +180,16 @@ function create_time_entry_row( time_entry_data )
     $( '#time_entry_table' ).prepend( row_element );
 }
 
-function update_time_entry_row( time_entry_record )
+function update_time_entry_row( time_entry )
 {
-    var time_entry_pk      = time_entry_record.time_entry_pk;
-    var barcode_scanner_id = time_entry_record.barcode_scanner_id;
-    var station            = time_entry_record.station;
-    var unit               = time_entry_record.unit;
-    var employee_name      = time_entry_record.employee_name;
-    var start_time         = time_entry_record.start_time;
-    var end_time           = time_entry_record.end_time;
-    var duration           = time_entry_record.duration;
+    var time_entry_pk      = time_entry.time_entry_pk;
+    var barcode_scanner_id = time_entry.barcode_scanner_id;
+    var station            = time_entry.station;
+    var unit               = time_entry.unit;
+    var employee_name      = time_entry.employee_name;
+    var start_time         = time_entry.start_time;
+    var end_time           = time_entry.end_time;
+    var duration           = time_entry.duration;
 
     if( duration == undefined )
     {

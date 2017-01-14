@@ -23,7 +23,8 @@ function create_time_entry($data)
 
     $query .= " RETURNING *";
     $result = pg_query_params( $query, $params );
-    return $result;
+    $time_entry = pg_fetch_assoc( $result );
+    return $time_entry;
 }
 
 ?>

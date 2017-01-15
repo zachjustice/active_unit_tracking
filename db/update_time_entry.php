@@ -9,10 +9,16 @@ function update_time_entry( $data )
         $query .= " SET unit = $1, station = 'Final Assembly'";
         array_push( $params, $data['unit'] );
     }
-    else if( $data['employee_name'] )
+    else if( $data['entity_name'] )
     {
-        $query .= " SET employee_name = $1";
-        array_push( $params, $data['employee_name'] );
+        $query .=<<<SQL
+            SET entity = (
+                SELECT entity 
+                FROM tb_entity
+                WHERE name = $1
+            )
+SQL;
+        array_push( $params, $data['entity_name'] );
     }
 
     array_push( $params, $data['time_entry'] );

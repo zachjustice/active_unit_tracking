@@ -15,10 +15,10 @@ SQL;
         $query .= " AND unit = $2 ";
         array_push( $params, $barcode_data['unit'] );
     }
-    else if( $barcode_data['employee_name'] )
+    else if( $barcode_data['entity_name'] )
     {
-        $query .= " AND employee_name = $2 ";
-        array_push( $params, $barcode_data['employee_name'] );
+        $query .= " AND entity = (SELECT entity FROM tb_entity WHERE name = $2) ";
+        array_push( $params, $barcode_data['entity_name'] );
     }
 
     $query .= " RETURNING *";

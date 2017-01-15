@@ -1,5 +1,5 @@
 "use strict";
-var EMPLOYEE_BARCODE_PREFIX  = 'e';
+var ENTITY_BARCODE_PREFIX  = 'e';
 var UNIT_BARCODE_PREFIX  = 'u';
 var BARCODE_SCANNER_ID_PREFIX  = 'b';
 
@@ -21,18 +21,18 @@ function init()
 }
 
 // takes in a raw barcode input and returns a map like
-// { unit => unit id, employee => employee id, etc }
+// { unit => unit id, entity => entity id, etc }
 function parse_barcode( barcode )
 {
     // barcodes are encoded by identifier value pairs
     // in the form of value_identifier_value_identifier
     // ex: u_RGLMP4300J_e_123 designates the unit RGLMP4300J
-    // and employee 123 where 123 is a primary key in the db
+    // and entity 123 where 123 is a primary key in the db
     var barcode_array = barcode.split( '_' );
     var barcode_data = {
         unit : '',
         barcode_scanner_id: '',
-        employee_name : ''
+        entity_name : ''
     };
 
     // interpret barcode array into map
@@ -45,9 +45,9 @@ function parse_barcode( barcode )
         {
             barcode_data.unit = barcode_value;
         }
-        else if( barcode_subject == EMPLOYEE_BARCODE_PREFIX )
+        else if( barcode_subject == ENTITY_BARCODE_PREFIX )
         {
-            barcode_data.employee_name = barcode_value;
+            barcode_data.entity_name = barcode_value;
         }
         else if( barcode_subject == BARCODE_SCANNER_ID_PREFIX )
         {
@@ -87,6 +87,8 @@ function receive_barcode_input( barcode )
 
 function receive_get_time_entry_response( time_entry )
 {
+    console.log('receive_get_time_entry_response:');
+    console.log(time_entry);
     if( time_entry_state == TIME_ENTRY_STATES.READY )
     {
         // if this is the first barcode scanned for a new time entry,
@@ -105,7 +107,7 @@ function receive_get_time_entry_response( time_entry )
     // We have the necessary data to begin tracking time
     if( time_entry_state == TIME_ENTRY_STATES.INITIALIZE &&
         time_entry.unit &&
-        time_entry.employee_name &&
+        time_entry.entity_name &&
         time_entry.station
       )
     {
@@ -170,7 +172,7 @@ function create_time_entry_row( time_entry_data )
     var barcode_scanner_id = time_entry_data.barcode_scanner_id;
     var station            = time_entry_data.station;
     var unit               = time_entry_data.unit;
-    var employee_name      = time_entry_data.employee_name;
+    var entity_name      = time_entry_data.entity_name;
     var start_time         = time_entry_data.start_time;
     var end_time           = time_entry_data.end_time;
     var duration           = time_entry_data.duration;
@@ -183,7 +185,7 @@ function create_time_entry_row( time_entry_data )
     var row_element = $( '<tr id="time_entry_' + time_entry_pk + '">' )
         .append( '<td class="station">'       + station       + '</td>' )
         .append( '<td class="unit">'          + unit          + '</td>' )
-        .append( '<td class="employee_name">' + employee_name + '</td>' )
+        .append( '<td class="entity_name">' + entity_name + '</td>' )
         .append( '<td class="start_time">'    + start_time    + '</td>' )
         .append( '<td class="end_time">'      + end_time      + '</td>' )
         .append( '<td class="duration">'      + duration      + '</td>' );
@@ -205,7 +207,7 @@ function update_time_entry_row( time_entry )
     var barcode_scanner_id = time_entry.barcode_scanner_id;
     var station            = time_entry.station;
     var unit               = time_entry.unit;
-    var employee_name      = time_entry.employee_name;
+    var entity_name      = time_entry.entity_name;
     var start_time         = time_entry.start_time;
     var end_time           = time_entry.end_time;
     var duration           = time_entry.duration;
@@ -218,7 +220,7 @@ function update_time_entry_row( time_entry )
     var time_entry_row = $( '#time_entry_' + time_entry_pk );
         time_entry_row.find( '.station'       ).text( station       );
         time_entry_row.find( '.unit'          ).text( unit          );
-        time_entry_row.find( '.employee_name' ).text( employee_name );
+        time_entry_row.find( '.entity_name' ).text( entity_name );
         time_entry_row.find( '.start_time'    ).text( start_time    );
         time_entry_row.find( '.end_time'      ).text( end_time      );
         time_entry_row.find( '.duration'      ).text( duration      );

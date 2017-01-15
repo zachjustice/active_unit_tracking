@@ -1,6 +1,5 @@
 <?
-
-function get_time_entry_by_barcode_id( $barcode_scanner_id )
+function get_time_entry_by_pk( $time_entry_pk )
 {
     $query = <<<SQL
         SELECT time_entry,
@@ -9,22 +8,27 @@ function get_time_entry_by_barcode_id( $barcode_scanner_id )
             ( SELECT e.name
               FROM tb_entity e
               WHERE e.entity = te.entity ) as entity_name,
-            station,
+            ( SElECT s.name
+              FROM tb_station s
+              WHERE s.station = te.station ) as station_name,
             start_time,
             end_time,
             end_time - start_time as "duration"
         FROM tb_time_entry te
-        WHERE barcode_scanner_id = $1
-          AND (unit IS NULL OR entity IS NULL)
-          AND end_time IS NULL
+        WHERE time_entry = $1
 SQL;
 
-    $params = [ $barcode_scanner_id ];
+    $params = [ $time_entry_pk ];
 
     $result = pg_query_params( $query, $params );
-    // false if no time_entry, time_entry if one exists
     $time_entry = pg_fetch_assoc( $result );
+
+    foreach( $time_entry as $key => $value ) {
+        if( $value == null )
+        {
+            $time_entry[$key] = '';
+        }
+    }
+
     return $time_entry;
 }
-
-?>

@@ -20,7 +20,7 @@ TIME ENTRY
         date and an employee name or unit number, we update that time entry
         -there should only ever be one null end time per barcode scanner id
         -if they scan the employee name or unit twice at first, just update
-        time entry
+        time entry 
         -if they scan the employee name and unit to start the time entry,
         but then either the employee name or unit, end the time entry.
         -when we return data, use a seperate function for determining which 
@@ -32,6 +32,19 @@ TIME ENTRY
                 - paused time entries?
                 - would need an additional column like is_final
 
+DB UPDATES
+    -Employee table
+        - tb_time_entry uses employee pk as fk
+        - refactor employee name to employee
+    -Station table
+        - table for keeping track of station.
+        - Contains station pk, station name, and station type
+    -Station Type Table
+        - station type pk, station type name, department
+        - refactor tb_time_entry and db functions
+    -Unit Table
+        - unit, label, current station
+        - refactor tb_time_entry and db functions
 
 SCAN TWICE TO PAUSE GENIUSSSS
          

@@ -72,8 +72,8 @@ function receive_barcode_input( barcode )
     // parse raw barcode string into a map
     var barcode_data = parse_barcode( barcode );
 
-    if( time_entry_state == TIME_ENTRY_STATES.READY 
-        || time_entry_state == TIME_ENTRY_STATES.INITIALIZE
+    if( time_entry_state === TIME_ENTRY_STATES.READY 
+        || time_entry_state === TIME_ENTRY_STATES.INITIALIZE
       )
     {
         $.ajax({
@@ -83,7 +83,7 @@ function receive_barcode_input( barcode )
         }).done( receive_get_time_entry_response )
         .fail( /* TODO ajax error handling */ );
     }
-    else if( time_entry_state == TIME_ENTRY_STATES.IN_PROGRESS )
+    else if( time_entry_state === TIME_ENTRY_STATES.IN_PROGRESS )
     {
         $.ajax({
             url:      '/ajax/finish_time_entry.php',
@@ -96,9 +96,7 @@ function receive_barcode_input( barcode )
 
 function receive_get_time_entry_response( time_entry )
 {
-    console.log('receive_get_time_entry_response:');
-    console.log(time_entry);
-    if( time_entry_state == TIME_ENTRY_STATES.READY )
+    if( time_entry_state === TIME_ENTRY_STATES.READY )
     {
         // if this is the first barcode scanned for a new time entry,
         // create new row in time entrytable
@@ -114,10 +112,11 @@ function receive_get_time_entry_response( time_entry )
     }
 
     // We have the necessary data to begin tracking time
-    if( time_entry_state == TIME_ENTRY_STATES.INITIALIZE &&
-        time_entry.unit_label &&
-        time_entry.entity_name &&
-        time_entry.station_name
+    if( time_entry_state === TIME_ENTRY_STATES.INITIALIZE &&
+        is_str( time_entry.unit_label,
+                time_entry.entity_name,
+                time_entry.station_name
+              )
       )
     {
         time_entry_state = TIME_ENTRY_STATES.IN_PROGRESS;

@@ -7,7 +7,7 @@ require_once( '../db/get_time_entry_by_pk.php' );
 db_connect();
 
 $barcode_data = [
-    'unit'               => $_REQUEST['unit'],
+    'unit_label'         => $_REQUEST['unit_label'],
     'entity_name'        => $_REQUEST['entity_name'],
     'barcode_scanner_id' => $_REQUEST['barcode_scanner_id']
 ];

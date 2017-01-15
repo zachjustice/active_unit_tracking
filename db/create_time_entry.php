@@ -5,7 +5,7 @@ function create_time_entry($data)
     $query = '';
     $params = '';
 
-    if( $data['unit'] != "" )
+    if( $data['unit_label'] != "" )
     {
         $query = <<<SQL
             INSERT INTO tb_time_entry(
@@ -15,12 +15,12 @@ function create_time_entry($data)
             )
             VALUES(
                 $1,
-                $2,
+                (SELECT unit FROM tb_unit WHERE label = $2),
                 1
             )
 SQL;
 
-        $params = [ $data['barcode_scanner_id'], $data['unit'] ];
+        $params = [ $data['barcode_scanner_id'], $data['unit_label'] ];
     }
     else if( $data['entity_name'] != "" )
     {

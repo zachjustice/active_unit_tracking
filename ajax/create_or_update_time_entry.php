@@ -8,7 +8,7 @@ require_once( '../db/get_time_entry_by_pk.php' );
 db_connect();
 
 $data = [
-    'unit'               => $_REQUEST['unit'],
+    'unit_label'         => $_REQUEST['unit_label'],
     'entity_name'        => $_REQUEST['entity_name'],
     'barcode_scanner_id' => $_REQUEST['barcode_scanner_id']
 ];
@@ -17,7 +17,7 @@ $time_entry = upsert_time_entry( $data );
 
 if( !$time_entry )
 {
-    die(header("HTTP/1.0 500 Internal Server Error"));
+    fail();
 }
 
 if( $time_entry['unit'] &&
@@ -33,4 +33,4 @@ if( $time_entry['unit'] &&
 # so that we can return the entity name and duration
 $time_entry = get_time_entry_by_pk( $time_entry['time_entry'] );
 
-echo json_encode($time_entry);
+echo( json_encode($time_entry) );

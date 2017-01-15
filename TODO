@@ -36,18 +36,26 @@ DB UPDATES
     -Employee table(DONE)
         - tb_time_entry uses employee pk as fk
         - refactor employee name to employee
-    -Station table
+    -Station table (DONE)
         - table for keeping track of station.
         - Contains station pk, station name, and station type
-    -Station Type Table
+    -Station Type Table (DONE)
         - station type pk, station type name, department
         - refactor tb_time_entry and db functions
-    -Unit Table
+    -Unit Table (DONE)
         - unit, label, current station
         - refactor tb_time_entry and db functions
-    -Unit/Station Timelines
+    -Unit/Station Timelines (FUTURE)
         - Keep track which station each unit via tb_unit_station
         - Keep track of station timeline for models via tb_model_station_timeline
+
+VALIDATION
+    - Barcodes are correct format
+    - Check scanned information actually exists
+    - Validate ajax inputs
+    - Validate db function inputs
+    - DB queries fail and return errors properly
+        -Pop a front end error message
 
 SCAN TWICE TO PAUSE GENIUSSSS
          

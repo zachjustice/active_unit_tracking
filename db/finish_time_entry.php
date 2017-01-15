@@ -10,10 +10,10 @@ SQL;
 
     $params = [ $barcode_data['barcode_scanner_id'] ];
 
-    if( $barcode_data['unit'] )
+    if( $barcode_data['unit_label'] )
     {
-        $query .= " AND unit = $2 ";
-        array_push( $params, $barcode_data['unit'] );
+        $query .= " AND unit = (SELECT unit FROM tb_unit WHERE label = $2) ";
+        array_push( $params, $barcode_data['unit_label'] );
     }
     else if( $barcode_data['entity_name'] )
     {

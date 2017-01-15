@@ -1,10 +1,28 @@
 <?
+$is_debug = true;
+
+function fail()
+{
+    die(header("HTTP/1.0 500 Internal Server Error"));
+}
+
+function debug( $msg )
+{
+    if( $is_debug )
+    {
+        error_log( $msg );
+    }
+}
+
 function debug_dump( $object=null ){
-    ob_start();                    // start buffer capture
-    var_dump( $object );           // dump the values
-    $contents = ob_get_contents(); // put the buffer into a variable
-    ob_end_clean();                // end capture
-    error_log( $contents );        // log contents of the result of var_dump($object)
+    if( $is_debug )
+    {
+        ob_start();
+        var_dump( $object );
+        $contents = ob_get_contents();
+        ob_end_clean();
+        error_log( $contents );
+    }
 }
 
 function db_connect()

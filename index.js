@@ -1,7 +1,7 @@
 "use strict";
-var ENTITY_BARCODE_PREFIX  = 'e';
-var UNIT_BARCODE_PREFIX  = 'u';
-var BARCODE_SCANNER_ID_PREFIX  = 'b';
+var ENTITY_BARCODE_PREFIX     = 'e';
+var UNIT_BARCODE_PREFIX       = 'u';
+var BARCODE_SCANNER_ID_PREFIX = 'b';
 
 var time_entry_state  = '';
 var TIME_ENTRY_STATES = {
@@ -30,7 +30,7 @@ function parse_barcode( barcode )
     // and entity 123 where 123 is a primary key in the db
     var barcode_array = barcode.split( '_' );
     var barcode_data = {
-        unit : '',
+        unit_label : '',
         barcode_scanner_id: '',
         entity_name : ''
     };
@@ -43,7 +43,7 @@ function parse_barcode( barcode )
 
         if( barcode_subject == UNIT_BARCODE_PREFIX )
         {
-            barcode_data.unit = barcode_value;
+            barcode_data.unit_label = barcode_value;
         }
         else if( barcode_subject == ENTITY_BARCODE_PREFIX )
         {
@@ -60,6 +60,15 @@ function parse_barcode( barcode )
 
 function receive_barcode_input( barcode )
 {
+    if( !validate_barcode( barcode ) )
+    {
+        var msg = "An error was encountered scanning the barcode." 
+            msg = msg + " Please scan a valid barcode."
+
+        display_error( msg );
+        return;
+    }
+
     // parse raw barcode string into a map
     var barcode_data = parse_barcode( barcode );
 
@@ -106,7 +115,7 @@ function receive_get_time_entry_response( time_entry )
 
     // We have the necessary data to begin tracking time
     if( time_entry_state == TIME_ENTRY_STATES.INITIALIZE &&
-        time_entry.unit &&
+        time_entry.unit_label &&
         time_entry.entity_name &&
         time_entry.station_name
       )
@@ -170,9 +179,9 @@ function create_time_entry_row( time_entry_data )
 {
     var time_entry_pk      = time_entry_data.time_entry_pk;
     var barcode_scanner_id = time_entry_data.barcode_scanner_id;
-    var station_name            = time_entry_data.station_name;
-    var unit               = time_entry_data.unit;
-    var entity_name      = time_entry_data.entity_name;
+    var station_name       = time_entry_data.station_name;
+    var unit_label         = time_entry_data.unit_label;
+    var entity_name        = time_entry_data.entity_name;
     var start_time         = time_entry_data.start_time;
     var end_time           = time_entry_data.end_time;
     var duration           = time_entry_data.duration;
@@ -183,12 +192,12 @@ function create_time_entry_row( time_entry_data )
     }
 
     var row_element = $( '<tr id="time_entry_' + time_entry_pk + '">' )
-        .append( '<td class="station">'       + station_name       + '</td>' )
-        .append( '<td class="unit">'          + unit          + '</td>' )
-        .append( '<td class="entity_name">' + entity_name + '</td>' )
-        .append( '<td class="start_time">'    + start_time    + '</td>' )
-        .append( '<td class="end_time">'      + end_time      + '</td>' )
-        .append( '<td class="duration">'      + duration      + '</td>' );
+        .append( '<td class="station">'     + station_name + '</td>' )
+        .append( '<td class="unit_label">'  + unit_label   + '</td>' )
+        .append( '<td class="entity_name">' + entity_name  + '</td>' )
+        .append( '<td class="start_time">'  + start_time   + '</td>' )
+        .append( '<td class="end_time">'    + end_time     + '</td>' )
+        .append( '<td class="duration">'    + duration     + '</td>' );
 
     row_element.height( '37px' )
     row_element.data( 'barcode-scanner-id', barcode_scanner_id );
@@ -205,9 +214,9 @@ function update_time_entry_row( time_entry )
 {
     var time_entry_pk      = time_entry.time_entry_pk;
     var barcode_scanner_id = time_entry.barcode_scanner_id;
-    var station_name            = time_entry.station_name;
-    var unit               = time_entry.unit;
-    var entity_name      = time_entry.entity_name;
+    var station_name       = time_entry.station_name;
+    var unit_label         = time_entry.unit_label;
+    var entity_name        = time_entry.entity_name;
     var start_time         = time_entry.start_time;
     var end_time           = time_entry.end_time;
     var duration           = time_entry.duration;
@@ -218,10 +227,10 @@ function update_time_entry_row( time_entry )
     }
 
     var time_entry_row = $( '#time_entry_' + time_entry_pk );
-        time_entry_row.find( '.station'       ).text( station_name       );
-        time_entry_row.find( '.unit'          ).text( unit          );
-        time_entry_row.find( '.entity_name' ).text( entity_name );
-        time_entry_row.find( '.start_time'    ).text( start_time    );
-        time_entry_row.find( '.end_time'      ).text( end_time      );
-        time_entry_row.find( '.duration'      ).text( duration      );
+        time_entry_row.find( '.station'     ).text( station_name );
+        time_entry_row.find( '.unit_label'  ).text( unit_label   );
+        time_entry_row.find( '.entity_name' ).text( entity_name  );
+        time_entry_row.find( '.start_time'  ).text( start_time   );
+        time_entry_row.find( '.end_time'    ).text( end_time     );
+        time_entry_row.find( '.duration'    ).text( duration     );
 }

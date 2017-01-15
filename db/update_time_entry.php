@@ -6,17 +6,16 @@ function update_time_entry( $data )
 
     if( $data['unit'] )
     {
-        $query .= " SET unit = $1, station = 'Final Assembly'";
+        $query .= " SET unit = $1, station = 1";
         array_push( $params, $data['unit'] );
     }
     else if( $data['entity_name'] )
     {
-        $query .=<<<SQL
+        $query .= <<<SQL
             SET entity = (
                 SELECT entity 
                 FROM tb_entity
-                WHERE name = $1
-            )
+                WHERE name = $1 )
 SQL;
         array_push( $params, $data['entity_name'] );
     }

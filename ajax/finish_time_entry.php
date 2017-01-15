@@ -8,7 +8,7 @@ db_connect();
 
 $barcode_data = [
     'unit'               => $_REQUEST['unit'],
-    'entity_name'      => $_REQUEST['entity_name'],
+    'entity_name'        => $_REQUEST['entity_name'],
     'barcode_scanner_id' => $_REQUEST['barcode_scanner_id']
 ];
 

@@ -6,13 +6,10 @@ function get_time_entry_by_barcode_id( $barcode_scanner_id )
         SELECT time_entry,
             barcode_scanner_id,
             unit,
-            ( SELECT e.name
-              FROM tb_entity e
-              WHERE e.entity = te.entity ) as entity_name,
+            entity,
             station,
             start_time,
-            end_time,
-            end_time - start_time as "duration"
+            end_time
         FROM tb_time_entry te
         WHERE barcode_scanner_id = $1
           AND (unit IS NULL OR entity IS NULL)

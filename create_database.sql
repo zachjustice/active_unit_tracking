@@ -18,6 +18,15 @@ $$ language 'plpgsql';
 -- tb_department
 ----------------------------------
 
+CREATE TABLE tb_unit(
+    unit SERIAL PRIMARY KEY,
+    name VARCHAR UNIQUE NOT NULL,
+);
+
+----------------------------------
+-- tb_department
+----------------------------------
+
 CREATE TABLE tb_department(
     department SERIAL PRIMARY KEY,
     name VARCHAR UNIQUE NOT NULL

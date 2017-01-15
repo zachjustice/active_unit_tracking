@@ -108,7 +108,7 @@ function receive_get_time_entry_response( time_entry )
     if( time_entry_state == TIME_ENTRY_STATES.INITIALIZE &&
         time_entry.unit &&
         time_entry.entity_name &&
-        time_entry.station
+        time_entry.station_name
       )
     {
         time_entry_state = TIME_ENTRY_STATES.IN_PROGRESS;
@@ -170,7 +170,7 @@ function create_time_entry_row( time_entry_data )
 {
     var time_entry_pk      = time_entry_data.time_entry_pk;
     var barcode_scanner_id = time_entry_data.barcode_scanner_id;
-    var station            = time_entry_data.station;
+    var station_name            = time_entry_data.station_name;
     var unit               = time_entry_data.unit;
     var entity_name      = time_entry_data.entity_name;
     var start_time         = time_entry_data.start_time;
@@ -183,7 +183,7 @@ function create_time_entry_row( time_entry_data )
     }
 
     var row_element = $( '<tr id="time_entry_' + time_entry_pk + '">' )
-        .append( '<td class="station">'       + station       + '</td>' )
+        .append( '<td class="station">'       + station_name       + '</td>' )
         .append( '<td class="unit">'          + unit          + '</td>' )
         .append( '<td class="entity_name">' + entity_name + '</td>' )
         .append( '<td class="start_time">'    + start_time    + '</td>' )
@@ -205,7 +205,7 @@ function update_time_entry_row( time_entry )
 {
     var time_entry_pk      = time_entry.time_entry_pk;
     var barcode_scanner_id = time_entry.barcode_scanner_id;
-    var station            = time_entry.station;
+    var station_name            = time_entry.station_name;
     var unit               = time_entry.unit;
     var entity_name      = time_entry.entity_name;
     var start_time         = time_entry.start_time;
@@ -218,7 +218,7 @@ function update_time_entry_row( time_entry )
     }
 
     var time_entry_row = $( '#time_entry_' + time_entry_pk );
-        time_entry_row.find( '.station'       ).text( station       );
+        time_entry_row.find( '.station'       ).text( station_name       );
         time_entry_row.find( '.unit'          ).text( unit          );
         time_entry_row.find( '.entity_name' ).text( entity_name );
         time_entry_row.find( '.start_time'    ).text( start_time    );

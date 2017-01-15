@@ -16,7 +16,7 @@ function create_time_entry($data)
             VALUES(
                 $1,
                 $2,
-                'Final Assembly'
+                1
             )
 SQL;
 

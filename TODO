@@ -33,7 +33,7 @@ TIME ENTRY
                 - would need an additional column like is_final
 
 DB UPDATES
-    -Employee table
+    -Employee table(DONE)
         - tb_time_entry uses employee pk as fk
         - refactor employee name to employee
     -Station table
@@ -45,6 +45,9 @@ DB UPDATES
     -Unit Table
         - unit, label, current station
         - refactor tb_time_entry and db functions
+    -Unit/Station Timelines
+        - Keep track which station each unit via tb_unit_station
+        - Keep track of station timeline for models via tb_model_station_timeline
 
 SCAN TWICE TO PAUSE GENIUSSSS
          

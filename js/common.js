@@ -1,4 +1,17 @@
 "use strict";
+function dismiss_alert( selector )
+{
+    if( !element_exists( selector ) )
+    {
+        return null;
+    }
+
+    $( '.alert' ).addClass( 'fade' );
+
+    setTimeout( function() {
+        $( '.alert' ).alert( 'close' )
+    }, 250 );
+}
 
 function display_error( error_container, message )
 {

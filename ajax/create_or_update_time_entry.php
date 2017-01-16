@@ -7,13 +7,21 @@ require_once( '../db/get_time_entry_by_pk.php' );
 
 db_connect();
 
-$data = [
-    'unit_label'         => $_REQUEST['unit_label'],
-    'entity_name'        => $_REQUEST['entity_name'],
-    'barcode_scanner_id' => $_REQUEST['barcode_scanner_id']
+$barcode_data = [];
+$constraints = [
+    'unit_label'         => [ 'validator' => 'is_string', 'must_exist' => true ],
+    'entity_name'        => [ 'validator' => 'is_string', 'must_exist' => true ],
+    'barcode_scanner_id' => [ 'validator' => 'isInt'    , 'must_exist' => true ]
 ];
 
-$time_entry = upsert_time_entry( $data );
+$barcode_data = create_map_from_request( $barcode_data, $_REQUEST, $constraints );
+
+if( is_string( $barcode_data ) )
+{
+    fail();
+}
+
+$time_entry = upsert_time_entry( $barcode_data );
 
 if( !$time_entry )
 {

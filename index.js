@@ -64,8 +64,7 @@ function receive_barcode_input( barcode )
         return null;
     }
 
-    $( '.alert' ).addClass( 'fade' );
-    setTimeout( function() { $( '.alert' ).alert( 'close' ) }, 250 );
+    dismiss_alert( '.alert' );
 
     // parse raw barcode string into a map
     var barcode_data = parse_barcode( barcode );

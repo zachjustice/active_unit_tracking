@@ -51,12 +51,16 @@ DB UPDATES
 
 VALIDATION
     - Barcodes are correct format (DONE)
-        - Display UX error messages
+        - JS validation functions (DONE)
+        - Display UX error messages (DONE)
     - Check scanned information actually exists
     - Validate ajax inputs
     - Validate db function inputs
     - DB queries fail and return errors properly
         -Pop a front end error message
+    - Figure out a good way to return null values from db
+        - currently overwrite with '' if null in db func
+        - hb templates should probably fix this
 
 FUTURE:
 SCAN TWICE TO PAUSE GENIUSSSS

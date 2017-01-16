@@ -10,6 +10,7 @@
         </div>
         <p>To begin tracking time for a unit at this station, scan the the unit, rework, or employee barcodes. You can also click the "New Time Entry" button below.</p>
         <button type="button" class="btn btn-default">New Time Entry</button>
+        <div class="error-container" style="margin-top: 10px"></div>
         <table class="table table-bordered" style="margin-top: 20px">
             <thead>
                 <tr>
@@ -54,4 +55,3 @@
     <? require_once('includes/footer.php') ?>
     <script src="js/barcode.js"></script>
     <script src="index.js"></script>
-</html>

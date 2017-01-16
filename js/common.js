@@ -1,3 +1,16 @@
+function display_error( error_container, msg )
+{
+    $( error_container ).empty();
+    var error = "<div class='alert alert-danger alert-dismissible show' role='alert'>" +
+    "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>" +
+    "<span aria-hidden='true'>&times;</span>" +
+    "</button>" +
+    msg +
+    "</div>";
+
+    $( error_container ).append( error );
+}
+
 function is_null( o )
 {
     return o === null ? true : false;
@@ -36,9 +49,13 @@ function is_str( ...strings )
     for( var i = 0; i < length; i++ )
     {
         var str = strings[i];
+
+        // return false if its not a string
+        //              if its an empty string
+        //              unless we're ok with empty strings
         if( 
-            typeof str === 'string' &&
-            ( str.trim.length === 0 || allow_empty )
+            typeof str !== 'string' ||
+            ( str.trim().length === 0 && !allow_empty )
           )
         {
             return false;

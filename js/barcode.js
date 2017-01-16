@@ -1,3 +1,16 @@
+var ENTITY_BARCODE_PREFIX     = 'e';
+var UNIT_BARCODE_PREFIX       = 'u';
+var BARCODE_SCANNER_ID_PREFIX = 'b';
+
+function validate_barcode( barcode )
+{
+    var regex = '^' + BARCODE_SCANNER_ID_PREFIX + '_\\d+' +
+        '(_' + ENTITY_BARCODE_PREFIX + '_[a-zA-Z\\s]+)?' +
+        '(_' + UNIT_BARCODE_PREFIX   + "_RGL[A-Z]{2}\\d+[A-Z]{3}\\d{4}[A-L])?$";
+
+    return is_str( barcode ) && !is_null( barcode.match( regex ) );
+}
+
 // only init when the page has loaded
 function init_barcode_handler( receive_barcode_input_callback ) {
     // variable to ensure we wait to check the input we are receiving

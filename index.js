@@ -1,7 +1,4 @@
 "use strict";
-var ENTITY_BARCODE_PREFIX     = 'e';
-var UNIT_BARCODE_PREFIX       = 'u';
-var BARCODE_SCANNER_ID_PREFIX = 'b';
 
 var time_entry_state  = '';
 var TIME_ENTRY_STATES = {
@@ -62,11 +59,11 @@ function receive_barcode_input( barcode )
 {
     if( !validate_barcode( barcode ) )
     {
-        var msg = "An error was encountered scanning the barcode." 
-            msg = msg + " Please scan a valid barcode."
+        var msg  = "<strong>Error scanning barcode:</strong>" 
+            msg += " Please scan a valid barcode."
 
-        display_error( msg );
-        return;
+        display_error( ".error-container", msg );
+        return false;
     }
 
     // parse raw barcode string into a map

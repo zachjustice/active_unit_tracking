@@ -1,5 +1,3 @@
-"use strict";
-
 var time_entry_state  = '';
 var TIME_ENTRY_STATES = {
     READY:       0, // have not scanned a barcode and ready to accept time entries
@@ -63,7 +61,7 @@ function receive_barcode_input( barcode )
             msg += " Please scan a valid barcode."
 
         display_error( ".error-container", msg );
-        return false;
+        return null;
     }
 
     // parse raw barcode string into a map

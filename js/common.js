@@ -1,29 +1,64 @@
-function display_error( error_container, msg )
-{
-    $( error_container ).empty();
-    var error = "<div class='alert alert-danger alert-dismissible show' role='alert'>" +
-    "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>" +
-    "<span aria-hidden='true'>&times;</span>" +
-    "</button>" +
-    msg +
-    "</div>";
+"use strict";
 
-    $( error_container ).append( error );
+function display_error( error_container, message )
+{
+    if( !element_exists( error_container ) || !is_str( message, true ) )
+    {
+        return null;
+    }
+
+    var context    = { message : message };
+    var error_html = format_template( '#error_message_template', context );
+
+    if( is_null( error_html ) )
+    {
+        return null;
+    }
+
+    $( error_container ).empty();
+    $( error_container ).append( error_html );
+}
+
+function format_template( selector, context )
+{
+    if( !element_exists( selector ) || 
+        !is_str( $( selector ).html() ) ||
+        !is_object( context ) 
+      )
+    {
+        return null;
+    }
+
+    var source   = $( selector ).html();
+    var template = Handlebars.compile( source );
+    var html     = template( context )
+
+    return html;
+}
+
+function element_exists( selector )
+{
+    return $( selector ).length > 0;
 }
 
 function is_null( o )
 {
-    return o === null ? true : false;
+    return o === null;
 }
 
 function is_undef( o )
 {
-    return o === undefined ? true : false;
+    return o === undefined;
 }
 
 function is_null_or_undef( o )
 {
     return is_null( o ) || is_undef( o ); 
+}
+
+function is_object( o )
+{
+    return typeof o === 'object';
 }
 
 // Validates a list of variables as strings.

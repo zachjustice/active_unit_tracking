@@ -52,6 +52,7 @@
       </div>
 
     </div> <!-- /container -->
+    <? require_once( 'templates/error_message.php' ) ?>
     <? require_once('includes/footer.php') ?>
     <script src="js/barcode.js"></script>
     <script src="index.js"></script>

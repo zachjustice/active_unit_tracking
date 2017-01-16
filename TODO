@@ -50,12 +50,20 @@ DB UPDATES
         - Keep track of station timeline for models via tb_model_station_timeline
 
 VALIDATION
-    - Barcodes are correct format
+    - Barcodes are correct format (DONE)
+        - Display UX error messages
     - Check scanned information actually exists
     - Validate ajax inputs
     - Validate db function inputs
     - DB queries fail and return errors properly
         -Pop a front end error message
 
+FUTURE:
 SCAN TWICE TO PAUSE GENIUSSSS
+- Client side js error logging
+    - First, console errors instead of return null
+    - Second, log these errors in db or log file or something
+        - Potentially have way too many errors
+        - Keep only the last 24 hours of errors
+        - Let's me determine if anything is fucking up at Regal
          
